@@ -1,0 +1,32 @@
+<div class="container">
+    <p>message will be displayed here</p>
+    <div>
+        <%= success %>
+    </div>
+</div>
+        <h1>SECRET PAGE :)</h1>
+
+<% if(user.local) { %>
+    <div>
+        <h3>hello local user - 
+            <%= user.local.username %>
+        </h3>
+    </div>
+<% } %>
+
+
+<% if(user.facebook) { %>
+    <div>
+        <img src="<%= user.facebook.url %>" >
+            <h3>hello Facebook user - <%= user.facebook.username %></h3>
+    </div>
+<% } %>
+
+<% if(user.google) { %>
+    <div>
+        <img src="<%= user.google.url %>" >
+            <h3>hello Google user - <%= user.google.username %></h3>
+    </div>
+<% } %>
+
+<a href="/logout"><button>logout</button></a>

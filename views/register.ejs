@@ -1,0 +1,49 @@
+<% include ./partials/headerauth %>
+
+    <div class="loginBox">
+        <form method="POST" action="/register">
+            <div class="title">
+                Create an account
+            </div>
+            <div>
+                <span>USERNAME</span><br>
+                <input type="text" name='username' autocomplete="on" %>">
+                <% if(errors) { %>
+                    <% errors.forEach(err => { %>
+                        <% if(err.param === 'username') { %>
+                            <span><%= err.msg %></span>
+                        <% } %>
+                    <% }); %>
+                <% } %>
+            </div>
+            <div>
+                <span>PASSWORD</span>
+                <input type="password" name='password' autocomplete="on">
+                <% if(errors) { %>
+                    <% errors.forEach(err => { %>
+                        <% if(err.param === 'password') { %>
+                            <span><%= err.msg %></span>
+                        <% } %>
+                    <% }); %>
+                <% } %>
+            </div>
+            <div>
+                <span>CONFIRM PASSWORD</span>
+                <input type="password" name='matchpassword' autocomplete="on">
+                <% if(errors) { %>
+                    <% errors.forEach(err => { %>
+                        <% if(err.param === 'matchpassword') { %>
+                            <span><%= err.msg %></span>
+                        <% } %>
+                    <% }); %>
+                <% } %>
+            </div>
+            <button class="submit">Continue</button>
+        </form>
+
+        <div class="register">
+            <a href="/login">Already have an account?</a>
+        </div>
+    </div>
+
+    <% include ./partials/footer %>
