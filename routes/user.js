@@ -14,7 +14,15 @@ router.get('/login', (req, res) => {
 router.get('/register', (req, res) => {
     res.render('register', { title: 'register', errors: '' });
 });
-router.get('/profile', (req, res, next) => {
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
+}
+
+router.get('/profile', isLoggedIn, (req, res, next) => {
     console.log(req.user);
     res.render('profile', { user: req.user, title: 'profile-page' });
 });
@@ -126,11 +134,5 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/');
-}
 
 module.exports = router;

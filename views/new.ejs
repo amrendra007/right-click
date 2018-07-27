@@ -1,0 +1,45 @@
+<% include ./partials/header %>
+
+<div class="contestWrapper">
+    <form name="myform" method="POST" action="/contests">
+        <div>
+            <p>Enter Contest Name</p>
+            <input type="text" name= "contestName" id="contestName" required>
+            <% if(errors) { %>
+                    <% errors.forEach(err => { %>
+                        <% if(err.param === 'contestName') { %>
+                            <span><%= err.msg %></span>
+                        <% } %>
+                    <% }); %>
+            <% } %>
+        </div>
+
+        <div>
+            <p>Enter details of contest</p>
+            <textarea cols="50" rows="4" name="description" id="description"></textarea>
+            <% if(errors) { %>
+                    <% errors.forEach(err => { %>
+                        <% if(err.param === 'description') { %>
+                            <span><%= err.msg %></span>
+                        <% } %>
+                    <% }); %>
+            <% } %>
+        </div>
+
+        <div>
+            <p>Enter ending Date:</p>
+            <input type="date" id="timeSpan" name="timeSpan" >
+            <% if(errors) { %>
+                    <% errors.forEach(err => { %>
+                        <% if(err.param === 'timeSpan') { %>
+                            <span><%= err.msg %></span>
+                        <% } %>
+                    <% }); %>
+            <% } %>
+        </div>
+        <button id="submitBtn">submit</button>
+    </form>
+</div>
+
+<script src="/contestSrc.js"></script>
+<% include ./partials/footer %>

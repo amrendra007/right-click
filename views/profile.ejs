@@ -6,7 +6,7 @@
 </div>
         <h1>SECRET PAGE :)</h1>
 
-<% if(user.local) { %>
+<% if(user.local.username !== undefined) { %>
     <div>
         <h3>hello local user - 
             <%= user.local.username %>
@@ -15,14 +15,14 @@
 <% } %>
 
 
-<% if(user.facebook) { %>
+<% if(user.facebook.username !== undefined) { %>
     <div>
         <img src="<%= user.facebook.url %>" >
             <h3>hello Facebook user - <%= user.facebook.username %></h3>
     </div>
 <% } %>
 
-<% if(user.google) { %>
+<% if(user.google.username !== undefined) { %>
     <div>
         <img src="<%= user.google.url %>" >
             <h3>hello Google user - <%= user.google.username %></h3>

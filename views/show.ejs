@@ -1,0 +1,63 @@
+<% include ./partials/header %>
+<h1>show page</h1>
+<div>
+    <img src="<%=contest.coverUrl%>" alt="" width="640" height="360">
+    <h3>contest detail</h3>
+    <h4><%- contest.contestName%></h4>
+    <p><%- contest.description %></p>
+    <p><%= contest.endingDate %></p>
+
+    <h3>creator detail</h3>
+    <img src="<%= contest.author.url %>" alt="">
+    <h4><%= contest.author.username %></h4>
+    <hr>
+
+    <div>
+        <h3>participite in the contest:</h3>
+        <div>
+            <input type="file" id="file-input" >
+            <span id="error"></span>
+        </div>
+        <div>
+            <p id='nameEmailError'></p>
+            <input type="text"  id='name' placeholder="name" >
+        </div>
+        <div>
+            <input type="email"  id='email' placeholder="email">
+        </div>
+        <div>
+            <img id="preview" style="width:100px; height: 100;">
+        </div>
+        <div>
+            <input type="submit" id="submitbtn" value="submit">
+        </div>
+        <hr>
+        <h3>vote:</h3>
+        <div class="votingSection" id="contestantData">
+
+            <% if( contest.participant && contest.participant.length > 0 ) { %>
+                <% contest.participant.forEach(function(item) { %>
+                    <div>
+                        <div>
+                            <p><%= item.name %></p>
+                        </div>
+                        <div>
+                            <img style="width:300px; height: 300;" src="<%= item.photoUrl %>" alt="">
+                        </div>
+                        <div>
+                            <!-- added participantId on btn to make vote req grabbing it -->
+                            <input type="button"  value="Vote" class="votingBtn" participantid="<%= item._id %>">
+                        </div>
+                        <div>
+                            <p>Hits: <%= item.voteCount %></p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <h2>start participating in contest to get upvote </h2>
+            <% } %>
+        </div>
+    </div>
+</div>
+<script src="/show.js"></script>
+<% include ./partials/footer %>

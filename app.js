@@ -17,12 +17,16 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const app = express();
 require('dotenv').config();
 const User = require('./models/userDb');
+
+//  requiring routes
+const awsRoutes = require('./routes/aws');
 const contestRoutes = require('./routes/contest');
 const userRoutes = require('./routes/user');
 
 //  database conn
-mongoose.connect(`${process.env.DB_HOST}${process.env.DB_USER}:${process.env.DB_PASS}@ds137581.mlab.com:37581/right-click`, { useNewUrlParser: true });
-// mongoose.connect('mongodb://localhost:27017/right-click', { useNewUrlParser: true });
+// mongoose.connect(`${process.env.DB_HOST}${process.env.DB_USER}:${process.env.DB_PASS}
+// @ds137581.mlab.com:37581/right-click`, { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost:27017/right-click', { useNewUrlParser: true });
 
 const db = mongoose.connection;
 db.once('open', () => {
@@ -55,6 +59,7 @@ app.use((req, res, next) => {
 //  route mount
 app.use('/', contestRoutes);
 app.use('/', userRoutes);
+app.use('/', awsRoutes);
 
 //  PASSPORT local CONFIGRATION
 passport.use(new LocalStrategy((username, password, done) => {
