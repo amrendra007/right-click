@@ -6,6 +6,10 @@ const ContestSchema = new mongoose.Schema({
     milliSecond: Number,
     endingDate: Date,
     coverUrl: String,
+    expire: {
+        type: Boolean,
+        default: false,
+    },
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

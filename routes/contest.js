@@ -5,9 +5,15 @@ const { sanitizeBody } = require('express-validator/filter');
 const router = express.Router();
 const Contest = require('../models/contestDb');
 const Participant = require('../models/participantDb');
+const Result = require('../models/resultDb');
 
 router.get('/', (req, res) => {
-    res.render('home', { title: 'right-click' });
+    Result.find({}, (err, allRes) => {
+        if (err) {
+            console.log(err);
+        }
+        res.render('home', { title: 'right-click', results: allRes });
+    });
 });
 
 //!  middleware
@@ -19,11 +25,9 @@ function isLoggedIn(req, res, next) {
     res.redirect('/login');
 }
 
-
 function coverUrlGenerator() {
     const urlArray = ['https://s3.ap-south-1.amazonaws.com/justchill/award.png',
         'https://s3.ap-south-1.amazonaws.com/justchill/alone.jpg',
-        'https://s3.ap-south-1.amazonaws.com/justchill/cool.jpg',
         'https://s3.ap-south-1.amazonaws.com/justchill/lens.jpg',
         'https://s3.ap-south-1.amazonaws.com/justchill/night.jpg',
         'https://s3.ap-south-1.amazonaws.com/justchill/photo.jpg'];
@@ -46,10 +50,8 @@ router.get('/contests/new', isLoggedIn, (req, res) => {
     res.render('new', { title: 'new', errors: '', timeError: false });
 });
 
-//  show one contest n variable to grab id for ajax
-let contestId;
+//  show one contest
 router.get('/contests/:id', (req, res, next) => {
-    contestId = req.params.id; //eslint-disable-line
     Contest.findById(req.params.id)
         .populate('participant')
         .exec((err, foundContest) => {
@@ -57,39 +59,47 @@ router.get('/contests/:id', (req, res, next) => {
                 return next(err);
             }
             // console.log(foundContest);
-            res.render('show', { title: 'livecontest', contest: foundContest });
+            Result.findOne({ key: req.params.id }, (error, foundResult) => {
+                if (error) {
+                    return next(error);
+                }
+                res.render('show', { title: 'livecontest', contest: foundContest, result: foundResult });
+            });
         });
 });
 
 
 //!  api to update participant data
 router.post('/contests/api', (req, res, next) => {
-    // console.log(contestId);
-    Contest.findById(contestId, (err, foundContest) => {
-        if (err) {
-            return res.status(500).end();
-        }
-        const participantData = {
-            name: req.body.name,
-            email: req.body.email,
-            photoUrl: req.body.photoUrl,
-        };
-        Participant.create(participantData, (error, newParticipant) => {
-            if (error) {
+    if (req.body.contestid) {
+        Contest.findById(req.body.contestid, (err, foundContest) => {
+            if (err) {
                 return res.status(500).end();
             }
-            foundContest.participant.unshift(newParticipant);
-            foundContest.save((er) => {
-                if (er) {
+            const participantData = {
+                name: req.body.name,
+                email: req.body.email,
+                photoUrl: req.body.photoUrl,
+            };
+            Participant.create(participantData, (error, newParticipant) => {
+                if (error) {
                     return res.status(500).end();
                 }
-                // console.log(newParticipant);
-                //  sending only participant data
-                res.write(JSON.stringify(newParticipant));
-                res.status(200).end();
+                foundContest.participant.unshift(newParticipant);
+                foundContest.save((er) => {
+                    if (er) {
+                        return res.status(500).end();
+                    }
+                    console.log('newparticipant on sever', newParticipant);
+                    //  sending only participant data
+                    res.write(JSON.stringify(newParticipant));
+                    res.status(200).end();
+                });
             });
         });
-    });
+    } else {
+        res.status(500).end();
+    }
 });
 
 //! api to record vote
@@ -99,10 +109,18 @@ router.post('/contests/vote/api', (req, res, next) => {
             if (err) {
                 return res.status(500).end();
             }
-            foundParticipant.voteCount += 1;
-            console.log(foundParticipant);
-            res.end();
+            foundParticipant.voteCount += 1; //eslint-disable-line
+            foundParticipant.save((error, updatedParticipant) => {
+                if (error) {
+                    return res.status(500).end();
+                }
+                console.log('updated vote count', updatedParticipant);
+                res.write(JSON.stringify(updatedParticipant.voteCount));
+                res.status(200).end();
+            });
         });
+    } else {
+        res.status(500).end();
     }
 });
 
@@ -126,6 +144,63 @@ const validator = [
 
     sanitizeBody('*').trim().escape(),
 ];
+
+//! improve error handling
+function handleResult(newContestId) {
+    if (newContestId) {
+        Contest.findById(newContestId)
+            .populate({
+                path: 'participant',
+                options: { sort: ({ voteCount: -1 }), limit: 3 },
+            })
+            .exec((err, resultData) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                // console.log('saved Data', resultData);
+                const result = new Result({
+                    contestName: resultData.contestName,
+                    description: resultData.description,
+                    milliSecond: resultData.milliSecond,
+                    endingDate: resultData.endingDate,
+                    coverUrl: resultData.coverUrl,
+                    key: resultData._id,
+                    author: {
+                        id: resultData.author.id,
+                        username: resultData.author.username,
+                        url: resultData.author.url,
+                    },
+                    participant: resultData.participant.map(item => ({
+                        name: item.name,
+                        email: item.email,
+                        photoUrl: item.photoUrl,
+                        voteCount: item.voteCount,
+                    })),
+                });
+                result.save((error) => {
+                    if (error) {
+                        console.log(error);
+                    }
+                });
+
+                Contest.findById(newContestId, (contesFindErr, foundContest) => {
+                    if (contesFindErr) {
+                        console.log(contesFindErr);
+                        return;
+                    }
+                    foundContest.expire = true; //eslint-disable-line
+                    foundContest.save((contestSaveErr, updtaedContest) => {
+                        if (contestSaveErr) {
+                            console.log(contestSaveErr);
+                            return;
+                        }
+                        console.log('updatedcontest after result', updtaedContest);
+                    });
+                });
+            });
+    }
+}
 
 //  post contest
 router.post('/contests', isLoggedIn, validator, (req, res, next) => {
@@ -176,17 +251,20 @@ router.post('/contests', isLoggedIn, validator, (req, res, next) => {
         author,
         coverUrl: coverUrlGenerator(),
     };
-    Contest.create(newContest, (err, newlyCreated) => {
+    Contest.create(newContest, (err, newlyCreatedContest) => {
         if (err) {
             return next(err);
         }
-        res.render('message', { title: 'message', contest: newlyCreated });
-        // console.log(newlyCreated);
-    });
+        res.render('message', { title: 'message', contest: newlyCreatedContest });
+        console.log('new contest', newlyCreatedContest);
 
-    // console.log('fb', req.user.facebook.username !== undefined);
-    // console.log('local', req.user.local.username !== undefined);
-    // console.log('google', req.user.google.username !== undefined);
+        setTimeout(() => {
+            // handleResult('5b59d2d9a62b4c244d822b22');
+            handleResult(newlyCreatedContest._id);
+        }, 180000);
+    });
 });
+
+// handleResult('5b59d2d9a62b4c244d822b22');
 
 module.exports = router;

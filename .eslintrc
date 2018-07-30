@@ -20,7 +20,8 @@
         "consistent-return":0,
         "no-unused-vars" : [1, {"argsIgnorePattern": "res|next|^err"}],
         "radix": 0,
-        "arrow-body-style":[2, "as-needed"]
+        "arrow-body-style":[2, "as-needed"],
+        "no-underscore-dangle":0
     }
 
 }

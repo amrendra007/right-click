@@ -22,6 +22,7 @@ const User = require('./models/userDb');
 const awsRoutes = require('./routes/aws');
 const contestRoutes = require('./routes/contest');
 const userRoutes = require('./routes/user');
+const resultRoutes = require('./routes/result');
 
 //  database conn
 // mongoose.connect(`${process.env.DB_HOST}${process.env.DB_USER}:${process.env.DB_PASS}
@@ -32,7 +33,7 @@ const db = mongoose.connection;
 db.once('open', () => {
     console.log('connected to db');
 });
-
+//! add maxage
 // app configuration
 app.use(session({
     secret: 'fasgasfgasfgastrtsdsf',
@@ -49,17 +50,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
 
+//  local var
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     res.locals.error = req.flash('error');
     res.locals.success = req.flash('success');
     res.locals.message = req.flash('message');
     next();
 });
 
-//  route mount
+//  mounting route
 app.use('/', contestRoutes);
 app.use('/', userRoutes);
 app.use('/', awsRoutes);
+app.use('/', resultRoutes);
 
 //  PASSPORT local CONFIGRATION
 passport.use(new LocalStrategy((username, password, done) => {

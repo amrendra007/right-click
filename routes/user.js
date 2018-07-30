@@ -24,7 +24,7 @@ function isLoggedIn(req, res, next) {
 
 router.get('/profile', isLoggedIn, (req, res, next) => {
     console.log(req.user);
-    res.render('profile', { user: req.user, title: 'profile-page' });
+    res.render('profile', { title: 'profile-page' });
 });
 
 router.get('/logout', (req, res, next) => {
@@ -80,22 +80,26 @@ router.post('/register', validator, (req, res, next) => {
                     return next(er);
                 }
                 req.flash('success', `Welcome ${newUser.local.username}!`);
-                res.redirect('/profile');
+                res.redirect('/');
             });
         });
     });
 });
 
 //  login post route
-router.post('/login', passport.authenticate('local',
-    { successRedirect: '/profile', failureRedirect: '/login', failureFlash: true }));
+router.post('/login',
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true,
+    }));
 
 //     ----------facebook auth----------
 router.get('/auth/facebook', passport.authenticate('facebook'));
 
 router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
-        successRedirect: '/profile',
+        successRedirect: '/',
         failureRedirect: '/login',
     }));
 
@@ -103,7 +107,7 @@ router.get('/auth/facebook', passport.authorize('facebook'));
 
 router.get('/auth/facebook/callback',
     passport.authorize('facebook', {
-        successRedirect: '/profile',
+        successRedirect: '/',
         failureRedirect: '/login',
     }));
 
@@ -112,7 +116,7 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] 
 
 router.get('/auth/google/callback',
     passport.authenticate('google', {
-        successRedirect: '/profile',
+        successRedirect: '/',
         failureRedirect: '/login',
     }));
 
@@ -120,8 +124,8 @@ router.get('/auth/google', passport.authorize('google', { scope: ['profile'] }))
 
 router.get('/auth/google/callback',
     passport.authorize('google', {
-        successRedirect: '/profile',
-        failureRedirect: '/',
+        successRedirect: '/',
+        failureRedirect: '/login',
     }));
 
 passport.serializeUser((id, done) => {

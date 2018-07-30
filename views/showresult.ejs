@@ -1,0 +1,37 @@
+<% include ./partials/header %>
+<h1>result page</h1>
+<div>
+    <img src="<%=result.coverUrl%>" alt="" width="640" height="360">
+    <h3>result detail</h3>
+    <h4><%- result.contestName%></h4>
+    <p><%- result.description %></p>
+    <p><%= result.endingDate %></p>
+
+    <h3>creator detail</h3>
+    <img src="<%= result.author.url %>" alt="">
+    <h4><%= result.author.username %></h4>
+    <hr>
+
+    <div>
+        <div>
+
+            <% if( result.participant && result.participant.length > 0 ) { %>
+                <% result.participant.forEach(function(item) { %>
+                    <div>
+                        <div>
+                            <p><%= item.name %></p>
+                        </div>
+                        <div>
+                            <img style="width:300px; height: 300;" src="<%= item.photoUrl %>" alt="">
+                        </div>
+                        <div>
+                            <p><%= item.voteCount %></p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<% include ./partials/footer %>

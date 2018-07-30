@@ -1,31 +1,30 @@
-<div class="container">
-    <p>message will be displayed here</p>
-    <div>
-        <%= success %>
-    </div>
-</div>
-        <h1>SECRET PAGE :)</h1>
+<h1>profile PAGE :)</h1>
 
-<% if(user.local.username !== undefined) { %>
+<% if(currentUser.local.username !== undefined) { %>
     <div>
-        <h3>hello local user - 
-            <%= user.local.username %>
-        </h3>
+        <%= currentUser.local.username %>
     </div>
 <% } %>
 
-
-<% if(user.facebook.username !== undefined) { %>
+<% if(currentUser.facebook.username !== undefined) { %>
     <div>
-        <img src="<%= user.facebook.url %>" >
-            <h3>hello Facebook user - <%= user.facebook.username %></h3>
+        <div>
+            <img src="<%= currentUser.facebook.url %>" >
+        </div>
+        <div>
+            <%= currentUser.facebook.username %>
+        </div>
     </div>
 <% } %>
 
-<% if(user.google.username !== undefined) { %>
+<% if(currentUser.google.username !== undefined) { %>
     <div>
-        <img src="<%= user.google.url %>" >
-            <h3>hello Google user - <%= user.google.username %></h3>
+        <div>
+            <img src="<%= currentUser.google.url %>" >
+        </div>
+        <div>
+            <%= currentUser.google.username %>
+        </div>
     </div>
 <% } %>
 

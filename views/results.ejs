@@ -1,16 +1,16 @@
 <% include ./partials/header %>
-<h1>Live contests</h1>
+<h1>Result page</h1>
 <div class="row text-center" style="display:flex; flex-wrap: wrap;">
-    <% contests.forEach(function(contest) { %>
+    <% results.forEach(function(result) { %>
         <div class="col-med-3 col-sm-6">
             <div class="thumbnail">
                 <p>
-                    <a href="/contests/<%= contest._id %>" class="btn btn-primary">
-                        <img src= "<%= contest.coverUrl %>" >
+                    <a href="/results/<%= result._id %>" class="btn btn-primary">
+                        <img src= "<%= result.coverUrl %>" >
                     </a>
                 </p>    
                 <div class="caption">
-                    <h4><%= contest.contestName %> </h4>
+                    <h4><%= result.contestName %> </h4>
                 </div>
             </div>
         </div>

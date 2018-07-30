@@ -1,10 +1,34 @@
 <% include ./partials/header %>
-<div class="register">
-    <h1>join us</h1>
-    <a href="/login">login</a>
+
+<div class="container">
+    <div>
+        <%= success %>
+    </div>
 </div>
 
+<div class="register">
+    <% if (!currentUser) { %>
+        <a href="/login">lgin</a>
+    <% } else { %>
+        <% if(currentUser.local.username !== undefined) { %>
+            <div>
+                <a href="/profile"><%= currentUser.local.username %></a>
+            </div>
+        <% } %>
 
+        <% if(currentUser.facebook.username !== undefined) { %>
+            <div>
+                <a href="/profile"><%= currentUser.facebook.username %></a>
+            </div>
+        <% } %>
+
+        <% if(currentUser.google.username !== undefined) { %>
+            <div>
+                <a href="/profile"><%= currentUser.google.username %></a>
+            </div>
+        <% } %>
+    <% } %>
+</div>
 
 <div>
     <h1>create contest</h1>
@@ -12,14 +36,30 @@
 </div>
 
 <div>
+    <h1>trending images</h1>
+    <% if(results ) { %>
+        <% results.forEach(function(result) { %>
+            <div>
+                <h4><%= result.contestName %> </h4>
+            </div>
+            <div>
+                <img src="<%= result.participant[0].photoUrl %>" alt="" style="width:100px; height: 100;">
+            </div>
+            <div>
+                <h5><%= result.participant[0].name %> </h5>
+            </div>
+        <% }); %>
+    <% } %>
+</div>
+
+<div>
     <h1>live contest</h1>
     <a href="/contests">live contest</a>
 </div>
 
-
-
-<form action="/contests" method="POST">
-    <button>hit</button>
-</form>
+<div>
+    <h1>result</h1>
+    <a href="/results">check result</a>
+</div>
 
 <% include ./partials/footer %>

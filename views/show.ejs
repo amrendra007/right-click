@@ -13,25 +13,31 @@
     <hr>
 
     <div>
-        <h3>participite in the contest:</h3>
-        <div>
-            <input type="file" id="file-input" >
-            <span id="error"></span>
-        </div>
-        <div>
-            <p id='nameEmailError'></p>
-            <input type="text"  id='name' placeholder="name" >
-        </div>
-        <div>
-            <input type="email"  id='email' placeholder="email">
-        </div>
-        <div>
-            <img id="preview" style="width:100px; height: 100;">
-        </div>
-        <div>
-            <input type="submit" id="submitbtn" value="submit">
-        </div>
-        <hr>
+        <% if (contest.expire === false) { %>
+            <h3>participite in the contest:</h3>
+            <div>
+                <input type="file" id="file-input" >
+                <span id="error"></span>
+            </div>
+            <div>
+                <p id='nameEmailError'></p>
+                <input type="text"  id='name' placeholder="name" >
+            </div>
+            <div>
+                <input type="email"  id='email' placeholder="email">
+            </div>
+            <div>
+                <img id="preview" style="width:100px; height: 100;">
+            </div>
+            <div>
+                <input type="submit" id="submitbtn" value="submit" >
+            </div>
+            <hr>
+        <% } else { %>
+            <h1>Contest is expired</h1>
+            <p>result is Available <a href="<%= result.url %>">here</a> </p>
+            
+        <% }%>
         <h3>vote:</h3>
         <div class="votingSection" id="contestantData">
 
@@ -44,12 +50,15 @@
                         <div>
                             <img style="width:300px; height: 300;" src="<%= item.photoUrl %>" alt="">
                         </div>
+                        <% if (contest.expire === false) { %>
+                            <div>
+                                <!-- added participantId on btn to make vote req grabbing it -->
+                                <input type="button"  value="Vote" class="votingBtn" participantid="<%= item._id %>">
+                            </div>
+                        <% } %>
                         <div>
-                            <!-- added participantId on btn to make vote req grabbing it -->
-                            <input type="button"  value="Vote" class="votingBtn" participantid="<%= item._id %>">
-                        </div>
-                        <div>
-                            <p>Hits: <%= item.voteCount %></p>
+                            <!-- dom navigated to here to update votecount dnt chnge it pos-->
+                            <p><%= item.voteCount %></p>
                         </div>
                     </div>
                 <% }) %>
@@ -59,5 +68,7 @@
         </div>
     </div>
 </div>
-<script src="/show.js"></script>
+
+<script id="helper" contest="<%= JSON.stringify(contest) %>" src="/show.js"></script>
+
 <% include ./partials/footer %>
