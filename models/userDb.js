@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
             trim: true,
         },
         password: String,
+        url: String,
     },
     facebook: {
         id: String,

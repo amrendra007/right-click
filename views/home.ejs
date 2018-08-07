@@ -8,7 +8,7 @@
 
 <div class="register">
     <% if (!currentUser) { %>
-        <a href="/login">lgin</a>
+        <a href="/login">Login</a>
     <% } else { %>
         <% if(currentUser.local.username !== undefined) { %>
             <div>
@@ -40,7 +40,7 @@
     <% if(results ) { %>
         <% results.forEach(function(result) { %>
             <div>
-                <h4><%= result.contestName %> </h4>
+                <h4><%- result.contestName %> </h4>
             </div>
             <div>
                 <img src="<%= result.participant[0].photoUrl %>" alt="" style="width:100px; height: 100;">

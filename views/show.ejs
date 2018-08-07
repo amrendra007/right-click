@@ -5,7 +5,7 @@
     <h3>contest detail</h3>
     <h4><%- contest.contestName%></h4>
     <p><%- contest.description %></p>
-    <p><%= contest.endingDate %></p>
+    <p><%= contest.endingDate.toDateString() %></p>
 
     <h3>creator detail</h3>
     <img src="<%= contest.author.url %>" alt="">
@@ -30,7 +30,7 @@
                 <img id="preview" style="width:100px; height: 100;">
             </div>
             <div>
-                <input type="submit" id="submitbtn" value="submit" >
+                <input type="submit" id="submitbtn" value="submit" contestid="<%=contest._id %>" >
             </div>
             <hr>
         <% } else { %>
@@ -69,6 +69,6 @@
     </div>
 </div>
 
-<script id="helper" contest="<%= JSON.stringify(contest) %>" src="/show.js"></script>
+<script src="/show.js"></script>
 
 <% include ./partials/footer %>

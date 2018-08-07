@@ -259,12 +259,9 @@ router.post('/contests', isLoggedIn, validator, (req, res, next) => {
         console.log('new contest', newlyCreatedContest);
 
         setTimeout(() => {
-            // handleResult('5b59d2d9a62b4c244d822b22');
             handleResult(newlyCreatedContest._id);
         }, 180000);
     });
 });
-
-// handleResult('5b59d2d9a62b4c244d822b22');
 
 module.exports = router;

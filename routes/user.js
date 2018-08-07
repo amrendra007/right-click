@@ -7,6 +7,7 @@ const { sanitizeBody } = require('express-validator/filter');
 const router = express.Router();
 const saltRounds = 10;
 const User = require('../models/userDb');
+const Contest = require('../models/contestDb');
 
 router.get('/login', (req, res) => {
     res.render('login', { title: 'login' });
@@ -22,9 +23,22 @@ function isLoggedIn(req, res, next) {
     res.redirect('/login');
 }
 
+//! improve error
 router.get('/profile', isLoggedIn, (req, res, next) => {
     console.log(req.user);
-    res.render('profile', { title: 'profile-page' });
+    Contest.find({ 'author.id': req.user._id }, (err, foundContest) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        if (foundContest && foundContest.length === 0) {
+            console.log('contest not found');
+            res.render('profile', { title: 'profile-page', myContests: '' });
+            return;
+        }
+        // console.log('foundContest:', foundContest);
+        res.render('profile', { title: 'profile-page', myContests: foundContest });
+    });
 });
 
 router.get('/logout', (req, res, next) => {
@@ -71,6 +85,7 @@ router.post('/register', validator, (req, res, next) => {
         const user = new User();
         user.local.username = req.body.username;
         user.local.password = hash;
+        user.local.url = 'https://s3.ap-south-1.amazonaws.com/justchill/A.png';
         user.save((error, newUser) => {
             if (error) {
                 return next(error);

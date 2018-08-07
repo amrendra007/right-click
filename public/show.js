@@ -3,18 +3,16 @@ const fileInput = document.getElementById('file-input');
 const error = document.getElementById('error');
 const nameEmailError = document.getElementById('nameEmailError');
 
-const contest = document.getElementById('helper').getAttribute('contest');
-
-//  json parser
-function parseJsonSafely(stringData) {
-    let parsedJson;
-    try {
-        parsedJson = JSON.parse(stringData);
-    } catch (err) {
-        console.log(err);
-    }
-    return parsedJson;
-}
+//!  json parser use whereever needed
+// function parseJsonSafely(stringData) {
+//     let parsedJson;
+//     try {
+//         parsedJson = JSON.parse(stringData);
+//     } catch (err) {
+//         console.log(err);
+//     }
+//     return parsedJson;
+// }
 
 let photoUrl;
 
@@ -140,7 +138,7 @@ if (submitbtn) {
                     name: name.value,
                     email: email.value,
                     photoUrl,
-                    contestid: parseJsonSafely(contest)._id,
+                    contestid: submitbtn.getAttribute('contestid'),
                 }),
             })
                 .then(res => res.json())

@@ -92,7 +92,7 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'photos', 'email'],
 },
 (accessToken, refreshToken, profile, done) => {
-    // console.log(profile);
+    console.log('profile', profile);
     User.findOne({ 'facebook.id': profile.id }, (err, user) => {
         if (err) {
             console.log('err db');

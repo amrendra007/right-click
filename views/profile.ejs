@@ -1,9 +1,17 @@
-<h1>profile PAGE :)</h1>
+<% include ./partials/header %>
+<h1>My profile</h1>
 
 <% if(currentUser.local.username !== undefined) { %>
     <div>
+        <img src="<%= currentUser.local.url %>" >
+    </div>
+    <div>
         <%= currentUser.local.username %>
     </div>
+    <a href="/logout"><button>logout</button></a>
+    <hr>
+    <h1>My contest</h1>
+    <% include ./partials/mycontest-profile %>
 <% } %>
 
 <% if(currentUser.facebook.username !== undefined) { %>
@@ -14,7 +22,12 @@
         <div>
             <%= currentUser.facebook.username %>
         </div>
+        <a href="/logout"><button>logout</button></a>
     </div>
+
+    <hr>
+    <h1>My contest</h1>
+    <% include ./partials/mycontest-profile %>
 <% } %>
 
 <% if(currentUser.google.username !== undefined) { %>
@@ -25,7 +38,11 @@
         <div>
             <%= currentUser.google.username %>
         </div>
+        <a href="/logout"><button>logout</button></a>
     </div>
+    <hr>
+    <h1>My contest</h1>
+    <% include ./partials/mycontest-profile %>
 <% } %>
 
-<a href="/logout"><button>logout</button></a>
+<% include ./partials/footer %>

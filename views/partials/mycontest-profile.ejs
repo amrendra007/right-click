@@ -1,0 +1,25 @@
+<div class="row text-center" style="display:flex; flex-wrap: wrap;">
+    <% if (myContests) { %>
+        <% myContests.forEach(function(contest) { %>
+        <div class="col-med-3 col-sm-6">
+            <div class="thumbnail">
+                <p>
+                    <a href="/contests/<%= contest._id %>" class="btn btn-primary">
+                        <img src="<%= contest.coverUrl %>">
+                    </a>
+                </p>
+                <div class="caption">
+                    <h4>
+                        <%- contest.contestName %>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    <% }); %>
+    <% } else { %>
+        <div>
+            <h1>There is no contest here </h1>
+            <p>Go create one <a href="/contests/new">create contest</a></p>
+        </div>
+    <% } %>
+</div>
