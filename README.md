@@ -27,8 +27,12 @@ Add AWS_REGION and S3_BUCKET name. Create AWS IAM user and give permission to ac
 Add https to localhost create a ssl folder name your https certificates as server.crt and server.key keep that folder in root of Dir
 
 #### Running project
-Run npm install
+npm install
+
 Start mongodb server, configure url in app.js 
-Run node app.js, Go to <https://localhost:8000>
+
+node app.js
+
+Go to <https://localhost:8000>
 
 
