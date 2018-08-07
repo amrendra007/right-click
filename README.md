@@ -28,6 +28,9 @@ Add https to localhost create a ssl folder name your https certificates as serve
 
 #### Running project
 npm install
+
 Start mongodb server, configure url in app.js 
+
 node app.js
+
 Go to <https://localhost:8000>
