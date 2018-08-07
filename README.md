@@ -34,5 +34,3 @@ Start mongodb server, configure url in app.js
 node app.js
 
 Go to <https://localhost:8000>
-
-
